@@ -1,7 +1,8 @@
 //where bulk of code goes, learned from https://www.youtube.com/watch?v=1jtAWZK3Bbk
-
 const Discord = require("discord.js");
 require("dotenv").config();
+
+const generateImage = require("./generateImage"); //importing generateImage func from generateImage.js
 
 const client = new Discord.Client({
   intents: ["GUILDS", "GUILD_MESSAGES", "GUILD_MEMBERS"],
@@ -33,10 +34,12 @@ client.on("messageCreate", (message) => {
 
 const welcomeChannelId = "927782126265446481";
 
-client.on("guildMemberAdd", (member) => {
-  member.guild.channels.cache
-    .get(welcomeChannelId)
-    .send(`<@${member.id}> Welcome to the server!`);
+client.on("guildMemberAdd", async (member) => {
+  const img = await generateImage(member);
+  member.guild.channels.cache.get(welcomeChannelId).send({
+    content: `<@${member.id}> Welcome to the server!`,
+    files: [img],
+  });
 });
 
 client.login(process.env.TOKEN);
