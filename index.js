@@ -3,6 +3,7 @@ const Discord = require("discord.js");
 require("dotenv").config();
 
 const generateImage = require("./generateImage"); //importing generateImage func from generateImage.js
+const { MessageEmbed } = require("discord.js");
 
 const client = new Discord.Client({
   intents: ["GUILDS", "GUILD_MESSAGES", "GUILD_MEMBERS"],
@@ -10,20 +11,15 @@ const client = new Discord.Client({
 
 client.on("ready", () => {
   console.log(`Logged in as ${client.user.tag}`); //prints username of bot logging in with
-});
-
-client.on("messageCreate", (message) => {
-  //commands list - embed in the future
-  if (message.content == "commands?") {
-    message.reply(`typing \"hi\" - responds with \"Hello World!\"
-typing \"who are you?\" - responds with various info`);
-  }
+  client.channels.cache
+    .get("930517988732465153")
+    .send({ embeds: [onlineEmbed] });
 });
 
 client.on("messageCreate", (message) => {
   //trigger word replies with selected response
-  if (message.content == "hi") {
-    message.reply("Hello World!");
+  if (message.content == "hi") { 
+      message.reply("Hello World!");
   }
   if (message.content == "who are you?") {
     message.reply(
@@ -31,6 +27,57 @@ client.on("messageCreate", (message) => {
     );
   }
 });
+
+client.on("messageCreate", (message) => {
+  if (message.content == "embed") {
+    client.channels.cache
+      .get("927742707500191787")
+      .send({ embeds: [exampleEmbed] });
+  }
+});
+
+client.on("messageDelete", (message) => {
+  //ping message deleter
+  client.channels.cache
+    .get("930521237438996491")
+    .send("someones acting a little sussy...");
+});
+
+// inside a command, event listener, etc.
+const exampleEmbed = new MessageEmbed()
+  .setColor("#f7d344")
+  .setTitle("Some title")
+  .setURL("https://github.com/gitJamoo")
+  .setAuthor({
+    name: "Shinx Bot example embed",
+    iconURL: "https://i.imgur.com/BWl6L3J.png", //update with kaias new icon
+    url: "https://github.com/gitJamoo",
+  })
+  .setDescription("Shinx bot test description")
+  .setThumbnail("https://i.imgur.com/BWl6L3J.png")
+  .addFields(
+    { name: "Regular field title", value: "Some value here" }
+    //{ name: "\u200B", value: "\u200B" },
+    //{ name: "Inline field title", value: "Some value here", inline: true },
+    //{ name: "Inline field title", value: "Some value here", inline: true }
+  )
+  //.addField("Inline field title", "Some value here", true)
+  .setImage("https://i.imgur.com/BWl6L3J.png")
+  .setTimestamp()
+  .setFooter({
+    text: "Some footer text here",
+    iconURL: "https://i.imgur.com/BWl6L3J.png",
+  });
+
+const onlineEmbed = new MessageEmbed()
+  .setColor("#f7d344")
+  .setTitle("Shinx Bot")
+  .setAuthor({
+    name: "Shinx Bot embed",
+    iconURL: "https://i.imgur.com/BWl6L3J.png", //update with kaias new icon
+    url: "https://github.com/gitJamoo",
+  })
+  .setDescription("Shinx Bot is online!");
 
 const welcomeChannelId = "927782126265446481";
 
